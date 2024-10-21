@@ -1,8 +1,10 @@
 package com.techforb.challenge.controller;
 
-import com.techforb.challenge.dtos.AuthResponsoDto;
+import com.techforb.challenge.dtos.AuthResponseDto;
 import com.techforb.challenge.dtos.LoginDto;
 import com.techforb.challenge.dtos.RegistroDto;
+import com.techforb.challenge.dtos.response.ApiResponse;
+import com.techforb.challenge.exceptions.ResourceAlreadyExistsException;
 import com.techforb.challenge.models.Credencial;
 import com.techforb.challenge.models.Usuario;
 import com.techforb.challenge.respostories.ICredencialRepository;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/api/auth/")
 public class AuthController {
@@ -37,9 +42,10 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegistroDto registroDto) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> register(@RequestBody RegistroDto registroDto) {
         if (credencialRepository.existsByEmail(registroDto.getEmail()))
-            return new ResponseEntity<>("Email existente", HttpStatus.BAD_REQUEST);
+            throw new ResourceAlreadyExistsException("El email ya está registrado");
+
         Usuario usuario = new Usuario();
         usuario.setNombre(registroDto.getNombre());
         usuario.setApellido(registroDto.getApellido());
@@ -53,17 +59,23 @@ public class AuthController {
         credencial.setUsuario(usuarioSaved);
 
         credencialRepository.save(credencial);
-        return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.OK);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Usuario registrado exitosamente");
+
+        return ResponseEntity.ok(new ApiResponse<>(true,response,"Usuario registrado exitosamente"));
     }
 
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponsoDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
-        return new ResponseEntity<>(new AuthResponsoDto(token), HttpStatus.OK);
+        AuthResponseDto authResponse = new AuthResponseDto(token);
+        return ResponseEntity.ok(new ApiResponse<>(true,authResponse,"Login exitoso"));
+
     }
 
 }

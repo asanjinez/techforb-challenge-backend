@@ -17,9 +17,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private JwtAuthInterceptor jwtAuthInterceptor;
-
     @Bean
     AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager(); //Aca verificamos que los users y pass sean correctos
@@ -39,9 +36,6 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(jwtAuthInterceptor)
-                )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
