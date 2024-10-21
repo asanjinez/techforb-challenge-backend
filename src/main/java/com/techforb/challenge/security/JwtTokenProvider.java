@@ -19,7 +19,7 @@ public class JwtTokenProvider {
     @Value("${spring.jwt.secret-key}")
     private String SECRETO;
     public String generateToken(Authentication authentication) {
-        String username =  authentication.getClass().getName();
+        String username =  authentication.getName();
         Date tiempoActual = new Date();
         Date tiempoExpiracion = new Date(tiempoActual.getTime() + TIEMPO_EXPIRACION);
 
@@ -38,7 +38,7 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
+        log.info("Claims: {}", claims);
         return claims.getSubject();
     }
 

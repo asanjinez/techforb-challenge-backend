@@ -24,8 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     private String obtenerToken(HttpServletRequest request){
-        String bearer = request.getHeader("Autorizathion");
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer: "))
+        String bearer = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer "))
             return bearer.substring(7, bearer.length());
 
         log.error("Se intento obtener un token sin el prefijo Bearer: " + bearer);
