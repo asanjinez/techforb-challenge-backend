@@ -41,17 +41,19 @@ public class JwtTokenProvider {
         log.info("Claims: {}", claims);
         return claims.getSubject();
     }
-
-    public boolean validarToken(String token){
-        try {
-            Jwts.parser().setSigningKey(SECRETO).build().parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException e) {
-            log.error("Token expirado: {}", token);
-            throw new JwtAuthException("Sesion caducada, por favor inicie sesión nuevamente");
-        } catch (JwtException e) {
-            log.error("Error de JWT: {}", e.getMessage(),e);
-            throw new JwtAuthException("Token inválido o no soportado");
-        }
+    protected String getSecreto(){
+        return this.SECRETO;
     }
+//    public boolean validarToken(String token){
+//        try {
+//            Jwts.parser().setSigningKey(SECRETO).build().parseClaimsJws(token);
+//            return true;
+//        } catch (ExpiredJwtException e) {
+//            log.error("Token expirado: {}", token);
+//            throw new JwtAuthException("Sesion caducada, por favor inicie sesión nuevamente");
+//        } catch (JwtException e) {
+//            log.error("Error de JWT: {}", e.getMessage(),e);
+//            throw new JwtAuthException("Token inválido o no soportado");
+//        }
+//    }
 }

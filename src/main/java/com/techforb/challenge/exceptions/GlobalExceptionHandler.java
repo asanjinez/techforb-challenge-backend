@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
-        log.error("Se produjo un error inesperado: {}", ex.getCause(), ex);
+        log.error("Se produjo un error inesperado: {}", ex.getCause());
         ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error en el servidor");
         ApiResponse<String> errorResponse = new ApiResponse<>(false, apiError, "Error en el servidor");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
