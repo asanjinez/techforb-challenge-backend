@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/api/auth/")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -41,8 +41,8 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("register")
-    public ResponseEntity<ApiResponse<Map<String, String>>> register(@RequestBody RegistroDto registroDto) {
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegistroDto registroDto) {
         if (credencialRepository.existsByEmail(registroDto.getEmail()))
             throw new ResourceAlreadyExistsException("El email ya está registrado");
 
@@ -60,14 +60,11 @@ public class AuthController {
 
         credencialRepository.save(credencial);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Usuario registrado exitosamente");
-
-        return ResponseEntity.ok(new ApiResponse<>(true,response,"Usuario registrado exitosamente"));
+        return ResponseEntity.ok(new ApiResponse<>(true,"Usuario registrado exitosamente"));
     }
 
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDto>> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

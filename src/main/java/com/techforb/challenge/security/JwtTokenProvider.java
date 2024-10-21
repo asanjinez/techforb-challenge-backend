@@ -1,8 +1,9 @@
 package com.techforb.challenge.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.techforb.challenge.exceptions.JwtAuthException;
+import com.techforb.challenge.exceptions.ResourceAlreadyExistsException;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
+@Component @Slf4j
 public class JwtTokenProvider {
     @Value("${spring.jwt.expiration-time}")
     private Long TIEMPO_EXPIRACION;
@@ -45,8 +46,12 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().setSigningKey(SECRETO).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e){
-            throw new AuthenticationCredentialsNotFoundException("Token Invalido");
+        } catch (ExpiredJwtException e) {
+            log.error("Token expirado: {}", token);
+            throw new JwtAuthException("Sesion caducada, por favor inicie sesión nuevamente");
+        } catch (JwtException e) {
+            log.error("Error de JWT: {}", e.getMessage(),e);
+            throw new JwtAuthException("Token inválido o no soportado");
         }
     }
 }
