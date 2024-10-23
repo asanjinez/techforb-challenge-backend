@@ -71,7 +71,8 @@ public class AuthController {
         String token = jwtTokenProvider.generateToken(authentication);
 
         AuthResponseDto authResponse = new AuthResponseDto(token);
-        return ResponseEntity.ok(new ApiResponse<>(true,authResponse,"Login exitoso"));
+        ResponseEntity<ApiResponse<AuthResponseDto>> response = ResponseEntity.ok(new ApiResponse<>(true, authResponse, "Login exitoso"));
+        return response;
 
     }
 

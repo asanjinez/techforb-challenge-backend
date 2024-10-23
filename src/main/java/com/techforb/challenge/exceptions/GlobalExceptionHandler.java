@@ -32,9 +32,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse<String>> handleBadCredentials(BadCredentialsException ex) {
         log.error("Credenciales incorrectas: {}", ex.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
-        ApiResponse<String> errorResponse = new ApiResponse<>(false, apiErrorResponse, "Credenciales incorrectas.");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),"Credenciales incorrectas");
+        ApiResponse<String> errorResponse = new ApiResponse<>(false, apiErrorResponse, "Error de autenticacion.");
+        ResponseEntity<ApiResponse<String>> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        return response;
     }
     @ExceptionHandler(JwtAuthException.class)
     public ResponseEntity<ApiResponse<String>> handleJwtAuthException(JwtAuthException ex) {

@@ -45,10 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = obtenerToken(request);
-
-        if (StringUtils.hasText(token)) {
             try {
-                if (this.validarToken(token)) {
+                if (StringUtils.hasText(token) && this.validarToken(token)) {
                     String username = tokenProvider.obtenerUsername(token);
                     UserDetails userDetails = userDetailService.loadUserByUsername(username);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -57,16 +55,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
 
-                filterChain.doFilter(request, response);
             } catch (ExpiredJwtException e) {
                 handlerExceptionResolver.resolveException(request, response, null, new JwtAuthException("Sesión caducada, por favor inicie sesión nuevamente"));
 
             } catch (JwtException e) {
                 handlerExceptionResolver.resolveException(request, response, null, new JwtAuthException("Token inválido o no soportado"));
+            } finally
+            {
+                filterChain.doFilter(request, response);
             }
-        }
-
-
     }
     public boolean validarToken(String token){
             Jwts.parser().setSigningKey(tokenProvider.getSecreto()).build().parseClaimsJws(token);
