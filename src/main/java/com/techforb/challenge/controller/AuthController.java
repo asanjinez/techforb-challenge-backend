@@ -5,6 +5,7 @@ import com.techforb.challenge.dtos.LoginDto;
 import com.techforb.challenge.dtos.RegistroDto;
 import com.techforb.challenge.dtos.response.ApiResponse;
 import com.techforb.challenge.exceptions.ResourceAlreadyExistsException;
+import com.techforb.challenge.mappers.IUsuarioMapper;
 import com.techforb.challenge.models.Credencial;
 import com.techforb.challenge.models.Usuario;
 import com.techforb.challenge.respostories.ICredencialRepository;
@@ -33,6 +34,8 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     IUsuariosRepository usuariosRepository;
+    @Autowired
+    IUsuarioMapper usuarioMapper;
 
     @Autowired
     private ICredencialRepository credencialRepository;
@@ -70,9 +73,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
-        AuthResponseDto authResponse = new AuthResponseDto(token);
-        ResponseEntity<ApiResponse<AuthResponseDto>> response = ResponseEntity.ok(new ApiResponse<>(true, authResponse, "Login exitoso"));
-        return response;
+        Usuario usuario = usuariosRepository.findByEmail(loginDto.getEmail()).orElse(null);
+        AuthResponseDto authResponse = new AuthResponseDto(token,usuarioMapper.usuarioToUsuarioDto(usuario));
+        return ResponseEntity.ok(new ApiResponse<>(true, authResponse, "Login exitoso"));
 
     }
 

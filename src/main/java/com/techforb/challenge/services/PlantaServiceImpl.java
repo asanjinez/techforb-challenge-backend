@@ -48,9 +48,10 @@ public class PlantaServiceImpl implements IPlantaService {
     @Override
     public Planta update(PlantaDto plantaDto) {
         Planta plantaToedit = getPlantaById(plantaDto.getIdPlanta());
-        if (plantasRepository.existsByNombreAndPais(plantaDto.getNombre(), plantaDto.getPais())) {
-            throw new ResourceAlreadyExistsException("Ya existe una planta con el nombre: " + plantaDto.getNombre());
-        }
+//        En la sistema aparentemente no nos permite editar nombre y pais, pero si lo hiciera deberiamos verificar que no exista una planta con el mismo nombre y pais
+//        if (plantasRepository.existsByNombreAndPais(plantaDto.getNombre(), plantaDto.getPais())) {
+//            throw new ResourceAlreadyExistsException("Ya existe una planta con el nombre: " + plantaDto.getNombre());
+//        }
 
         plantaToedit.setNombre(plantaDto.getNombre());
         plantaToedit.setPais(plantaDto.getPais());

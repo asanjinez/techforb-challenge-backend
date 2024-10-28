@@ -13,9 +13,13 @@ public class Planta {
     private Long idPlanta;
     private String nombre;
     private String pais;
-    private String numeroLecturas;
-    private String numeroAlertasMedias;
-    private String numeroAlertasRojas;
-    private String sensoresDeshabilitados;
+    private Integer numeroLecturas;
+    private Integer numeroAlertasMedias;
+    private Integer numeroAlertasRojas;
+    private Integer sensoresDeshabilitados;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_parametro", referencedColumnName = "idParametro")
+    private Parametro parametros;
 
 }

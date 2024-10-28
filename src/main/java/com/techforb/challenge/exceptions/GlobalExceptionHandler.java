@@ -3,11 +3,14 @@ package com.techforb.challenge.exceptions;
 import com.techforb.challenge.dtos.response.ApiErrorResponse;
 import com.techforb.challenge.dtos.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -44,7 +47,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ApiResponse<String> errorResponse = new ApiResponse<>(false, apiErrorResponse, "Error de autenticación");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
-
+//    @Override
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+//            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        StringBuilder errors = new StringBuilder();
+//
+//        ex.getBindingResult().getFieldErrors().forEach(error ->
+//                errors.append(error.getField())
+//                        .append(": ")
+//                        .append(error.getDefaultMessage())
+//                        .append("; ")
+//        );
+//
+//        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), "Errores de validación");
+//        ApiResponse<String> errorResponse = new ApiResponse<>(false, apiErrorResponse, errors.toString());
+//
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+//    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
         log.error("Se produjo un error inesperado: {}", ex.getCause());

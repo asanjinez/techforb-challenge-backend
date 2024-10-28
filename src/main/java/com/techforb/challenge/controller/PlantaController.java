@@ -5,6 +5,7 @@ import com.techforb.challenge.dtos.response.ApiResponse;
 import com.techforb.challenge.mappers.IPlantaMapper;
 import com.techforb.challenge.models.Planta;
 import com.techforb.challenge.services.IPlantaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,13 +36,13 @@ public class PlantaController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<PlantaDto>> createPlanta(@RequestBody PlantaDto plantaDto) {
+    public ResponseEntity<ApiResponse<PlantaDto>> createPlanta(@Valid @RequestBody PlantaDto plantaDto) {
         Planta planta = plantaService.createPlanta(plantaDto);
         return ResponseEntity.ok(new ApiResponse<>(true, plantaMapper.plantaToPlantaDto(planta),"Planta con ID: " + planta.getIdPlanta() + " creada exitosamente"));
     }
 
     @PutMapping("/edit/{idPlanta}")
-    public ResponseEntity<ApiResponse<PlantaDto>> updatePlanta(@RequestBody PlantaDto plantaDto) {
+    public ResponseEntity<ApiResponse<PlantaDto>> updatePlanta(@Valid @RequestBody PlantaDto plantaDto) {
         Planta planta = plantaService.update(plantaDto);
         return ResponseEntity.ok(new ApiResponse<>(true, plantaMapper.plantaToPlantaDto(planta),"Planta con ID: " + planta.getIdPlanta() + " actualizada exitosamente"));
     }
