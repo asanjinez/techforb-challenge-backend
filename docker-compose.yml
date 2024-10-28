@@ -12,6 +12,8 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
       FRONTEND_URL: http://localhost:4200
+
+
     depends_on:
       mysqldb:
         condition: service_healthy
