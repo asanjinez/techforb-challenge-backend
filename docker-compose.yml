@@ -1,0 +1,30 @@
+services:
+  Techforb-Challenge:
+    build: .
+    image: user/image:tag
+    ports:
+      - 8080:8080
+    volumes:
+      - ${DOCKER_VOLUME_STORAGE:-/mnt/docker-volumes}/example:/opt/example/data
+    environment:
+      - DB_URL=jdbc:mysql://db_app:3307/db_app?createDatabaseIfNotExist=true&serverTimezone=UTC
+      - DB_USERNAME=root
+      - DB_PASSWORD=1234
+    depends_on:
+      db_app:
+        condition: service_healthy
+
+  db_app:
+    image: mysql:8.0.33
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: db_app
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
