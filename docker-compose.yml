@@ -1,19 +1,17 @@
 services:
-  Techforb-Challenge:
+  techforb-challenge:
     build: .
-    image: user/image:tag
     ports:
-      - 8080:8080
-    volumes:
-      - ${DOCKER_VOLUME_STORAGE:-/mnt/docker-volumes}/example:/opt/example/data
+      - "8080:8080"
     environment:
-      - DB_URL=jdbc:mysql://db_app:3307/db_app?createDatabaseIfNotExist=true&serverTimezone=UTC
-      - DB_USERNAME=root
-      - DB_PASSWORD=1234
+      DB_URL: jdbc:mysql://db_app:3306/techforb_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USERNAME: root
+      DB_PASSWORD: 1234
+      FRONTEND_URL: http://localhost:4200
+    restart: always
     depends_on:
       db_app:
         condition: service_healthy
-
   db_app:
     image: mysql:8.0.33
     ports:
@@ -21,10 +19,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_PASSWORD: 1234
-      MYSQL_DATABASE: db_app
+      MYSQL_DATABASE: techforb_db
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      interval: 10s
       timeout: 10s
-      retries: 5
+      retries: 10
