@@ -23,8 +23,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${frontend.url}")
-    private String frontendUrl;
+//    @Value("${frontend.url}")
+    private String frontendUrl = "http://localhost:4200";
 
     @Autowired
     @Qualifier("handlerExceptionResolver")

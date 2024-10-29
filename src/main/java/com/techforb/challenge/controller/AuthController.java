@@ -3,6 +3,7 @@ package com.techforb.challenge.controller;
 import com.techforb.challenge.dtos.AuthResponseDto;
 import com.techforb.challenge.dtos.LoginDto;
 import com.techforb.challenge.dtos.RegistroDto;
+import com.techforb.challenge.dtos.UsuarioDto;
 import com.techforb.challenge.dtos.response.ApiResponse;
 import com.techforb.challenge.exceptions.ResourceAlreadyExistsException;
 import com.techforb.challenge.mappers.IUsuarioMapper;
@@ -12,7 +13,6 @@ import com.techforb.challenge.respostories.ICredencialRepository;
 import com.techforb.challenge.respostories.IUsuariosRepository;
 import com.techforb.challenge.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -73,7 +73,16 @@ public class AuthController {
         Usuario usuario = usuariosRepository.findByEmail(loginDto.getEmail()).orElse(null);
         AuthResponseDto authResponse = new AuthResponseDto(token,usuarioMapper.usuarioToUsuarioDto(usuario));
         return ResponseEntity.ok(new ApiResponse<>(true, authResponse, "Login exitoso"));
-
     }
 
+    @PostMapping("/validarEmail")
+    public ResponseEntity<ApiResponse<Boolean>> validarEmail(@RequestBody LoginDto usuarioAvalidar) {
+        String email = usuarioAvalidar.getEmail();
+        try {
+            boolean isValid = !credencialRepository.existsByEmail(email);
+            return ResponseEntity.ok(new ApiResponse<>(true, isValid, "Email validado"));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse<>(false, false, "Error al validar el email"));
+        }
+    }
 }
