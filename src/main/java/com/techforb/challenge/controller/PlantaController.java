@@ -26,8 +26,6 @@ public class PlantaController {
     public ResponseEntity<ApiResponse<List<PlantaDto>>> getPlantas() {
         List<Planta> plantas = plantaService.findAll();
         return ResponseEntity.ok(new ApiResponse<>(true, plantaMapper.plantasToPlantasDto(plantas),plantas.size() + " Plantas encontradas"));
-
-
     }
     @GetMapping("/{idPlanta}")
     public ResponseEntity<ApiResponse<PlantaDto>> getPlanta(@PathVariable Long idPlanta) {

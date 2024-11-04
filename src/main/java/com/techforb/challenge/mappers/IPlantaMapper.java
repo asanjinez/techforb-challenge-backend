@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface IPlantaMapper {
     IPlantaMapper INSTANCE = Mappers.getMapper(IPlantaMapper.class);
+
      public PlantaDto plantaToPlantaDto(Planta planta);
      public Planta plantaDtoToPlanta(PlantaDto plantaDto);
      public List<PlantaDto> plantasToPlantasDto(List<Planta> plantas);

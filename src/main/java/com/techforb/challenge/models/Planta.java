@@ -12,7 +12,9 @@ public class Planta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlanta;
     private String nombre;
-    private String pais;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_pais", nullable = false)
+    private Country pais;
     private Integer numeroLecturas;
     private Integer numeroAlertasMedias;
     private Integer numeroAlertasRojas;

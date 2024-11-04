@@ -3,14 +3,11 @@ package com.techforb.challenge.exceptions;
 import com.techforb.challenge.dtos.response.ApiErrorResponse;
 import com.techforb.challenge.dtos.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -64,6 +61,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //
 //        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 //    }
+    @ExceptionHandler(FlagsException.class)
+    public ResponseEntity<ApiResponse<String>> handleHttpClientErrorException(FlagsException ex) {
+        log.error("Error al consumir Restcountries API: {}", ex.getMessage());
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),ex.getMessage());
+        ApiResponse<String> errorResponse = new ApiResponse<>(false, apiErrorResponse, "Error en el servidor");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
         log.error("Se produjo un error inesperado: {}", ex.getCause());

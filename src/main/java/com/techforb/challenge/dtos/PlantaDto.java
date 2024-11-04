@@ -1,6 +1,7 @@
 package com.techforb.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.techforb.challenge.models.Country;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class PlantaDto {
 
     @NotBlank(groups = {Actualizar.class}, message = "el pais es obligatorio")
     @NotNull(groups = {Actualizar.class}, message = "el pais no puede estar vacio")
-    private String pais;
+    private Country pais;
 
     @NotBlank(groups = {Actualizar.class}, message = "el numero de lecturas es obligatorio")
     @NotNull(groups = {Actualizar.class}, message = "el numero de lecturas no puede estar vacio")

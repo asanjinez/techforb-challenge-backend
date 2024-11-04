@@ -13,5 +13,5 @@ public interface IPlantasRepository extends JpaRepository<Planta,Long> {
     Optional<Planta> findByIdPlanta(Long idPlanta);
 
     boolean existsById(Long idPlanta);
-    boolean existsByNombreAndPais(String nombre, String pais);
+    boolean existsByNombreAndPais_Name(String nombre, String pais);
 }

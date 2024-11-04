@@ -26,7 +26,7 @@ public class PlantaServiceImpl implements IPlantaService {
         if (plantaDto.getIdPlanta() != null  && plantasRepository.existsById(plantaDto.getIdPlanta())) {
             throw new ResourceAlreadyExistsException("Ya existe una planta con el ID: " + plantaDto.getIdPlanta());
         }
-        if (plantasRepository.existsByNombreAndPais(plantaDto.getNombre(), plantaDto.getPais())) {
+        if (plantasRepository.existsByNombreAndPais_Name(plantaDto.getNombre(), plantaDto.getPais().getName())) {
             throw new ResourceAlreadyExistsException("Ya existe una planta con el nombre: " + plantaDto.getNombre());
         }
         return plantasRepository.save(plantaMapper.plantaDtoToPlanta(plantaDto));
