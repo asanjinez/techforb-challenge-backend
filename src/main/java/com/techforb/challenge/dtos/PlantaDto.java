@@ -42,6 +42,6 @@ public class PlantaDto {
 
     @NotBlank(groups = {Actualizar.class}, message = "el parametro es ogatorio")
     @NotNull(groups = {Actualizar.class}, message = "el parameto no puede estar vacio")
-    private ParametroDto parametro;
+    private ParametroDto parametros;
 
 }
